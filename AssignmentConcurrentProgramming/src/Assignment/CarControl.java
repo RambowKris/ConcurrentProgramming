@@ -39,7 +39,7 @@ class Gate {
 class Alley {
 
     Semaphore u = new Semaphore(4);
-    Semaphore d = new Semaphore(2);
+    Semaphore d = new Semaphore(1);
     boolean trafficUp;
 
     public void enter(int no) throws InterruptedException {
@@ -48,10 +48,38 @@ class Alley {
     	System.out.println("d holds: "+d.toString());
     	System.out.println("Direction up: "+trafficUp);
 
+//    	if(no<5){
+//    		if(Integer.parseInt(d.toString())==0){
+//    			if(Integer.parseInt(u.toString())<=4){
+//    				u.P();
+//    			}
+//    		}else{
+//    			if(Integer.parseInt(d.toString())==1 && Integer.parseInt(u.toString())<4){
+//    				
+//    			}
+//    			d.P();
+//    			u.P();
+//    		}
+//    	}else{
+//    		if(Integer.parseInt(d.toString())==1){
+//    			if(Integer.parseInt(u.toString())<=4){
+//    				u.P();
+//    			}
+//    		}else{
+//    			if(Integer.parseInt(d.toString())==0 && Integer.parseInt(u.toString())<4){
+//    				
+//    			}else{
+//    				d.V();
+//        			u.P();
+//    			}
+//    			
+//    		}
+//    	}
     	if(no<5){
     		if(trafficUp){
     			if(Integer.parseInt(u.toString())==4){
     				d.P();
+            		trafficUp=true;    				
     			}
                 try { u.P(); } catch (InterruptedException e) {}    		    			    			    			    			
     		}else{
@@ -62,13 +90,12 @@ class Alley {
     	}else{
     		if(trafficUp){
                 try { d.P(); } catch (InterruptedException e) {}    		    			    			    			    			
-                try { d.P(); } catch (InterruptedException e) {}    		    			    			    			    			
                 try { u.P(); } catch (InterruptedException e) {}    		    			    			    			    			
         		trafficUp=false;    				
     		}else{
     			if(Integer.parseInt(u.toString())==4){
     				d.P();
-    				d.P();
+            		trafficUp=false;    				
     			}
                 try { u.P(); } catch (InterruptedException e) {}    		    			    			
     		}
@@ -80,16 +107,11 @@ class Alley {
     	System.out.println("u holds: "+u.toString());
     	System.out.println("d holds: "+d.toString());
     	System.out.println("Direction up: "+trafficUp);
-
-    	u.V();    		
+    	u.V();
+    	
         
     	if(Integer.parseInt(u.toString())==4){
-        	if(no<5){
            		d.V();        			        			
-        	}else{
-             	d.V();        			        			
-               	d.V();        			        			        			
-        	}
         }
     }
 
@@ -99,19 +121,30 @@ class Barrier {
 	
     Semaphore c = new Semaphore(9);
     Semaphore b = new Semaphore(1);
+    int threshold = 9;
     
-    boolean barrelOn;
+    boolean barrierOn;
 
-    // Wait for others to arrive (if barrier active)
+    public Barrier(int i) {
+		c = new Semaphore(i);
+		threshold = i ;
+	}
+    
+    public Barrier() {
+    	
+	}
+
+	// Wait for others to arrive (if barrier active)
 	public void sync() { 
         try { c.P(); } catch (InterruptedException e) {}
-		if(barrelOn){
-	        System.out.println("Barrel semaphore: "+c.toString());
+		if(barrierOn){
+	        System.out.println("Barrier semaphore: "+c.toString());
 	        if(Integer.parseInt(c.toString())!=0){
 	            try { b.P(); } catch (InterruptedException e) {}	     
-	        	b.V();
 	        }else{
-	        	b.V();
+	        	for(int i=0;i<threshold;i++){
+	        		b.V();
+	        	}
 	        }
             
 		}
@@ -120,17 +153,17 @@ class Barrier {
 
 	// Activate barrier
 	public void on() {
-        if (!barrelOn) { 
+        if (!barrierOn) { 
             try { b.P(); } catch (InterruptedException e) {}
-            barrelOn = true; 
+            barrierOn = true; 
         }
 	}    
 
 	// Deactivate barrier
 	public void off() {
-        if (barrelOn) { 
+        if (barrierOn) { 
         	b.V();
-            barrelOn = false; 
+            barrierOn = false; 
         }		
 	}    
 
@@ -149,6 +182,7 @@ class Car extends Thread {
     Color col;                       // Car  color
     Gate mygate;                     // Gate at startposition
     Alley alley;
+    boolean inAlley;
     Pos AlleyEnter1 = new Pos(0,0);
     Pos AlleyEnter2 = new Pos(8,1);
     Pos AlleyEnter3 = new Pos(9,3);
@@ -167,6 +201,7 @@ class Car extends Thread {
         this.carcon=carcon;
         mygate = g;
         startpos = cd.getStartPos(no);
+        inAlley = false;
         barpos = cd.getBarrierPos(no);  // For later use
 
         col = chooseColor();
@@ -257,12 +292,14 @@ class Car extends Thread {
                 	carcon.getBarrier().sync();
                 }
 
-                if (atAlleyEntre(curpos)) { 
-                    alley.enter(no); 
+                if (atAlleyEntre(curpos) && !inAlley) { 
+                    alley.enter(no);
+                    inAlley=true;
                 }
 
-                if (atAlleyEnd(curpos)) { 
+                if (atAlleyEnd(curpos) && inAlley) { 
                     alley.leave(no); 
+                    inAlley=false;
                 }
 
                 newpos = nextPos(curpos);
@@ -312,6 +349,7 @@ public class CarControl implements CarControlI{
     Pos[] position;			  // Car positions
     Alley alley;			  // Alley
     Barrier bar;			  // Barrier
+    int threshold;
     
     
     public CarControl(CarDisplayI cd) {
@@ -321,6 +359,7 @@ public class CarControl implements CarControlI{
         position = new Pos[9];
         alley = new Alley();
         bar = new Barrier();
+        threshold=9;
 
         for (int no = 0; no < 9; no++) {
             gate[no] = new Gate();
@@ -364,8 +403,11 @@ public class CarControl implements CarControlI{
     }
 
     public void barrierSet(int k) { 
-        cd.println("Barrier threshold setting not implemented in this version");
-         // This sleep is for illustrating how blocking affects the GUI
+//        cd.println("Barrier threshold setting not implemented in this version");
+    	
+//    	bar = new Barrier(9);
+        
+    	// This sleep is for illustrating how blocking affects the GUI
         // Remove when feature is properly implemented.
         try { Thread.sleep(3000); } catch (InterruptedException e) { }
      }
