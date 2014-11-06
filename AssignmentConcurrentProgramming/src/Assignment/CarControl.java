@@ -137,17 +137,19 @@ class Barrier {
 	// Wait for others to arrive (if barrier active)
 	public void sync() { 
         try { c.P(); } catch (InterruptedException e) {}
+        
 		if(barrierOn){
-	        System.out.println("Barrier semaphore: "+c.toString());
 	        if(Integer.parseInt(c.toString())!=0){
 	            try { b.P(); } catch (InterruptedException e) {}	     
 	        }else{
-	        	for(int i=0;i<threshold;i++){
+	        	for(int i=0;i<threshold-1;i++){
 	        		b.V();
 	        	}
+	        	System.out.println("Barrier number: "+b.toString());
 	        }
             
 		}
+		
     	c.V();
 	}  
 
@@ -405,7 +407,7 @@ public class CarControl implements CarControlI{
     public void barrierSet(int k) { 
 //        cd.println("Barrier threshold setting not implemented in this version");
     	
-//    	bar = new Barrier(9);
+    	bar = new Barrier(k);
         
     	// This sleep is for illustrating how blocking affects the GUI
         // Remove when feature is properly implemented.
