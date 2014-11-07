@@ -40,6 +40,7 @@ class Alley {
 
     Semaphore u = new Semaphore(4);
     Semaphore d = new Semaphore(1);
+    Semaphore b = new Semaphore(1);
     boolean trafficUp;
 
     public void enter(int no) throws InterruptedException {
@@ -48,42 +49,22 @@ class Alley {
     	System.out.println("d holds: "+d.toString());
     	System.out.println("Direction up: "+trafficUp);
 
-//    	if(no<5){
-//    		if(Integer.parseInt(d.toString())==0){
-//    			if(Integer.parseInt(u.toString())<=4){
-//    				u.P();
-//    			}
-//    		}else{
-//    			if(Integer.parseInt(d.toString())==1 && Integer.parseInt(u.toString())<4){
-//    				
-//    			}
-//    			d.P();
-//    			u.P();
-//    		}
-//    	}else{
-//    		if(Integer.parseInt(d.toString())==1){
-//    			if(Integer.parseInt(u.toString())<=4){
-//    				u.P();
-//    			}
-//    		}else{
-//    			if(Integer.parseInt(d.toString())==0 && Integer.parseInt(u.toString())<4){
-//    				
-//    			}else{
-//    				d.V();
-//        			u.P();
-//    			}
-//    			
-//    		}
-//    	}
     	if(no<5){
     		if(trafficUp){
     			if(Integer.parseInt(u.toString())==4){
-    				d.P();
+                    try { d.P(); } catch (InterruptedException e) {}    		    			    			    			    			
             		trafficUp=true;    				
     			}
                 try { u.P(); } catch (InterruptedException e) {}    		    			    			    			    			
-    		}else{
-                try { d.P(); } catch (InterruptedException e) {}    		    			    			    			    			
+    		}else{    			
+                try { b.P(); } catch (InterruptedException e) {}    		    			    			    			    			
+                
+                if(trafficUp){
+                	b.V();
+                }else{
+                    try { d.P(); } catch (InterruptedException e) {} 
+                    b.V();
+                }
                 try { u.P(); } catch (InterruptedException e) {}    		    			    			    			    			
         		trafficUp=true;    				
     		}
