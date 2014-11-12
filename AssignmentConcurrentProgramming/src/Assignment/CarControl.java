@@ -44,11 +44,6 @@ class Alley {
     boolean trafficUp;
 
     public void enter(int no) throws InterruptedException {
-    	System.out.println(no+" is entering");
-    	System.out.println("u holds: "+u.toString());
-    	System.out.println("d holds: "+d.toString());
-    	System.out.println("Direction up: "+trafficUp);
-
     	if(no<5){
     		if(trafficUp){
     			if(Integer.parseInt(u.toString())==4){
@@ -84,13 +79,8 @@ class Alley {
     }
 
     public void leave(int no) throws InterruptedException {
-    	System.out.println(no+" is leaving");
-    	System.out.println("u holds: "+u.toString());
-    	System.out.println("d holds: "+d.toString());
-    	System.out.println("Direction up: "+trafficUp);
     	u.V();
-    	
-        
+    	        
     	if(Integer.parseInt(u.toString())==4){
            		d.V();        			        			
         }
@@ -118,6 +108,8 @@ class Barrier {
 	// Wait for others to arrive (if barrier active)
 	public void sync() { 
         try { c.P(); } catch (InterruptedException e) {}
+    	System.out.println("Barrier number1: "+b.toString());
+    	System.out.println("Barrier number2: "+c.toString());
         
 		if(barrierOn){
 	        if(Integer.parseInt(c.toString())!=0){
@@ -126,7 +118,6 @@ class Barrier {
 	        	for(int i=0;i<threshold-1;i++){
 	        		b.V();
 	        	}
-	        	System.out.println("Barrier number: "+b.toString());
 	        }
             
 		}
@@ -146,7 +137,7 @@ class Barrier {
 	public void off() {
         if (barrierOn) { 
         	b.V();
-            barrierOn = false; 
+        	barrierOn = false; 
         }		
 	}    
 
