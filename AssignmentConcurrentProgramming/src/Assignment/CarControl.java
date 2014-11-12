@@ -387,11 +387,22 @@ public class CarControl implements CarControlI{
      }
 
     public void removeCar(int no) { 
-        cd.println("Remove Car not implemented in this version");
+    	try{
+        gate[no].close();
+    	car[no].interrupt();
+    	cd.clear(position[no]);
+    	}catch(Exception e){
+    		
+    	}
+//        cd.println("Remove Car not implemented in this version");
     }
 
     public void restoreCar(int no) { 
-        cd.println("Restore Car not implemented in this version");
+        gate[no] = new Gate();
+        car[no] = new Car(no,cd,gate[no],this);
+        car[no].start();
+
+//        cd.println("Restore Car not implemented in this version");
     }
 
     /* Speed settings for testing purposes */
