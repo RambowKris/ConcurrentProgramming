@@ -176,8 +176,8 @@ class Barrier {
 	int threshold = 9;
 
 	boolean barrierOn;
-	
-	public void print(String msg){
+
+	public void print(String msg) {
 		System.out.println(msg);
 		System.out.println("Barrier number1: " + b.toString());
 		System.out.println("Barrier number2: " + c.toString());
@@ -203,8 +203,8 @@ class Barrier {
 					throw new InterruptedException();
 				}
 			} else {
-				int cars=Integer.parseInt(c.toString());
-				for (int i = 0; i < 9-cars; i++) {
+				int cars = Integer.parseInt(c.toString());
+				for (int i = 0; i < 9 - cars; i++) {
 					b.V();
 				}
 				b.P();
@@ -230,8 +230,8 @@ class Barrier {
 	// Deactivate barrier
 	public void off() {
 		if (barrierOn) {
-			int cars=Integer.parseInt(c.toString())-1;
-			for (int i = 0; i < 9-cars; i++) {
+			int cars = Integer.parseInt(c.toString()) - 1;
+			for (int i = 0; i < 9 - cars; i++) {
 				b.V();
 			}
 			barrierOn = false;
@@ -417,6 +417,7 @@ class Car extends Thread {
 
 			newpos = nextPos(curpos);
 			Pos[] position = carcon.getPositions();
+			carcon.seeSem();
 			boolean free = true;
 			for (int i = 0; i < 9; i++) {
 				if (i != no) {
@@ -429,6 +430,7 @@ class Car extends Thread {
 					}
 				}
 			}
+			carcon.freeSem();
 
 			if (free) {
 				// Move to new position
@@ -444,7 +446,9 @@ class Car extends Thread {
 				cd.clear(curpos, newpos);
 				cd.mark(newpos, col, no);
 				curpos = newpos;
+				carcon.seeSem();
 				carcon.setPosition(no, curpos);
+				carcon.freeSem();
 			} else {
 				try {
 					sleep(speed());
@@ -457,7 +461,6 @@ class Car extends Thread {
 		}
 
 	}
-
 }
 
 public class CarControl implements CarControlI {
@@ -469,6 +472,8 @@ public class CarControl implements CarControlI {
 	Alley alley; // Alley
 	Barrier bar; // Barrier
 	int threshold;
+	Semaphore sem = new Semaphore(1);
+
 
 	public CarControl(CarDisplayI cd) {
 		this.cd = cd;
@@ -496,6 +501,14 @@ public class CarControl implements CarControlI {
 
 	public Barrier getBarrier() {
 		return bar;
+	}
+
+	public void seeSem() {
+		try{ sem.P(); }catch(InterruptedException e){}
+	}
+	
+	public void freeSem() {
+		sem.V();
 	}
 
 	public Pos[] getPositions() {
@@ -530,10 +543,10 @@ public class CarControl implements CarControlI {
 			} else {
 				bar.threshold = k;
 				System.out.println(bar.c.toString());
-				int limit=9-Integer.parseInt(bar.c.toString());
-				System.out.println("This is limit "+limit);
-				if(limit > k){
-					for(int i=0;i<k;i++){
+				int limit = 9 - Integer.parseInt(bar.c.toString());
+				System.out.println("This is limit " + limit);
+				if (limit > k) {
+					for (int i = 0; i < k; i++) {
 						bar.b.V();
 					}
 				}
@@ -542,10 +555,10 @@ public class CarControl implements CarControlI {
 
 		// This sleep is for illustrating how blocking affects the GUI
 		// Remove when feature is properly implemented.
-//		try {
-//			Thread.sleep(3000);
-//		} catch (InterruptedException e) {
-//		}
+		// try {
+		// Thread.sleep(3000);
+		// } catch (InterruptedException e) {
+		// }
 	}
 
 	public void removeCar(int no) {

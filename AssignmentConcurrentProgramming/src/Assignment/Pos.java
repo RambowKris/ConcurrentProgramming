@@ -10,7 +10,7 @@ public class Pos {
 
     public int row;       // Note: public
     public int col;
-
+    
     public Pos(int i, int j) { row = i;  col = j; }
 
     public static boolean equal(Pos p1, Pos p2) {
