@@ -6,11 +6,11 @@ public class MonitorCounting {
  static class Counter {
    int x = 0;
 
-   public void incr() {
+   public synchronized void incr() {
      x++;
    }
 
-   public int read() {
+   public synchronized int read() {
      return x;
    }
 
