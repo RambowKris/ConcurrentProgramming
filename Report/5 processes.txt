@@ -1,91 +1,26 @@
-Result med 5 processer
-
-/* DTU Course 02158 Concurrent Programming
- *   spinAlley.pml 
- *     Simple PROMELA model with non-atomic increment and decrement 
- */
-
-#define N	5	/* no. of processes */
-
-short c = 0;
-short u = 4;
-short d = 1;
-short b = 1;
-bool trafficUp = false;
-
-/* Declare and instantiate N Counter processes */
-
-
-inline v(s){
-	s++;
-}
-
-inline p(s){
-	atomic{
-		s > 0 -> s--;
-	}
-}
-
-active [N] proctype Alley () 
-{
-	c=(c+1)%N;
-entry:
-	if :: c<4 -> 
-		if :: trafficUp == true -> 
-			if :: u == 4 -> p(d);
-				trafficUp = true;
-               :: else -> skip;
-			fi;
-		p(u);
-		:: trafficUp == false -> p(b);
-			if :: trafficUp == true ->
-				v(b);
-			:: trafficUp == false ->
-				p(d);
-				v(b); 
-			fi;
-			p(u);
-			trafficUp=true;
-		:: else -> skip;
-		fi;
-	:: c>=4 ->
-		if :: trafficUp == true -> 
-			p(d);
-			p(u);
-			trafficUp = false;
-		:: trafficUp ==false; ->
-			if :: u == 4 ->
-				p(d);
-				trafficUp=false;
-			:: else -> skip;
-			fi;
-			p(u);
-		fi;
-	:: else -> skip;
-	fi;
-
-
-leave:
-	v(u);
-	atomic{
-	if :: u==4 ->		
-		if :: d== 0 -> v(d);
-		:: else -> skip;
-		fi;
-	:: else -> skip;
-	fi;
-	}
-}
-
-
-
-/* Invariant check */
-
-
-active proctype Check ()
-{
-	(0 <= c && c <= 7) -> assert(true);
-	(0 <= u && u <= 4) -> assert(true);
-	(0 <= d && d <= 1) -> assert(true);
-	(0 <= b && b <= 1) -> assert(true);	
-}
+(Spin Version 6.1.0 -- 4 May 2011)
+	+ Partial Order Reduction
+Full statespace search for:
+	never claim         	- (none specified)
+	assertion violations	+
+	cycle checks       	- (disabled by -DSAFETY)
+	invalid end states	+
+State-vector 60 byte, depth reached 72, ??? errors: 0 ???
+ 36981340 states, stored
+ 57403474 states, matched
+ 94384814 transitions (= stored+matched)
+ 10018950 atomic steps
+hash conflicts:  35003377 (resolved)
+Stats on memory usage (in Megabytes):
+ 3103.598	equivalent memory usage for states (stored*(State-vector + overhead))
+ 2015.764	actual memory usage for states (compression: 64.95%)
+         	state-vector as stored = 29 byte + 28 byte overhead
+  256.000	memory used for hash table (-w25)
+    0.107	memory used for DFS stack (-m2000)
+ 2271.064	total actual memory usage
+unreached in proctype Alley
+	(0 of 91 states)
+unreached in proctype Check
+	(0 of 9 states)
+pan: elapsed time 145 seconds
+pan: rate 255784.62 states/second

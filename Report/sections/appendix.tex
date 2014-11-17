@@ -1,0 +1,154 @@
+%!TEX root = ../Thesis.tex
+\section{Appendix}
+\subsection{jSpin}\label{sec:jSpin}
+The code from jSpin to run the analysis:
+\begin{lstlisting} 
+define N		8	/* no. of processes */
+
+short c = 0;
+short u = 4;
+short d = 1;
+short b = 1;
+bool trafficUp = false;
+
+/* Declare and instantiate N Counter processes */
+
+
+inline v(s){
+	s++;
+}
+
+inline p(s){
+	atomic{
+		s > 0 -> s--;
+	}
+}
+
+active [N] proctype Alley () 
+{
+	c=(c+1)%N;
+entry:
+	if :: c<4 -> 
+		if :: trafficUp == true -> 
+			if :: u == 4 -> p(d);
+				trafficUp = true;
+               :: else -> skip;
+			fi;
+		p(u);
+		:: trafficUp == false -> p(b);
+			if :: trafficUp == true ->
+				v(b);
+			:: trafficUp == false ->
+				p(d);
+				v(b); 
+			fi;
+			p(u);
+			trafficUp=true;
+		:: else -> skip;
+		fi;
+	:: c>=4 ->
+		if :: trafficUp == true -> 
+			p(d);
+			p(u);
+			trafficUp = false;
+		:: trafficUp ==false; ->
+			if :: u == 4 ->
+				p(d);
+				trafficUp=false;
+			:: else -> skip;
+			fi;
+			p(u);
+		fi;
+	:: else -> skip;
+	fi;
+
+leave:
+	v(u);
+	atomic{
+	if :: u==4 ->		
+		if :: d== 0 -> v(d);
+		:: else -> skip;
+		fi;
+	:: else -> skip;
+	fi;
+	}
+}
+
+/* Invariant check */
+active proctype Check ()
+{
+	(0 <= c && c <= 7) -> assert(true);
+	(0 <= u && u <= 4) -> assert(true);
+	(0 <= d && d <= 1) -> assert(true);
+	(0 <= b && b <= 1) -> assert(true);	
+}
+\end{lstlisting}
+
+The analysis run with 5 processes:
+
+\begin{lstlisting}
+(Spin Version 6.1.0 -- 4 May 2011)
+	+ Partial Order Reduction
+Full statespace search for:
+	never claim         	- (none specified)
+	assertion violations	+
+	cycle checks       	- (disabled by -DSAFETY)
+	invalid end states	+
+State-vector 60 byte, depth reached 72, ... errors: 0 ...
+ 36981340 states, stored
+ 57403474 states, matched
+ 94384814 transitions (= stored+matched)
+ 10018950 atomic steps
+hash conflicts:  35003377 (resolved)
+Stats on memory usage (in Megabytes):
+ 3103.598	equivalent memory usage for states 
+ (stored*(State-vector + overhead))
+ 2015.764	actual memory usage for states (compression: 64.95%)
+         	state-vector as stored = 29 byte + 28 byte overhead
+  256.000	memory used for hash table (-w25)
+    0.107	memory used for DFS stack (-m2000)
+ 2271.064	total actual memory usage
+unreached in proctype Alley
+	(0 of 91 states)
+unreached in proctype Check
+	(0 of 9 states)
+pan: elapsed time 145 seconds
+pan: rate 255784.62 states/second
+\end{lstlisting}
+
+The analysis run with 6 process:
+\begin{lstlisting}
+pan: resizing hashtable to -w29.. pan: out of memory
+hint: to reduce memory, recompile with
+  -DCOLLAPSE # good, fast compression, or
+  -DMA=68   # better/slower compression, or
+  -DHC # hash-compaction, approximation
+  -DBITSTATE # supertrace, approximation
+(Spin Version 6.1.0 -- 4 May 2011)
+Warning: Search not completed
+	+ Partial Order Reduction
+Full statespace search for:
+	never claim         	- (none specified)
+	assertion violations	+
+	cycle checks       	- (disabled by -DSAFETY)
+	invalid end states	+
+State-vector 68 byte, depth reached 84, ... errors: 0 ...
+ 2.69e+08 states, stored
+4.5920728e+08 states, matched
+7.2820728e+08 transitions (= stored+matched)
+ 79882859 atomic steps
+hash conflicts: 2.7405665e+08 (resolved)
+Stats on memory usage (in Megabytes):
+24627.686	equivalent memory usage for 
+states (stored*(State-vector + overhead))
+11490.506	actual memory usage for states (compression: 46.66%)
+         	state-vector as stored = 17 byte + 28 byte overhead
+ 4096.000	memory used for hash table (-w29)
+    0.107	memory used for DFS stack (-m2000)
+    4.537	memory lost to fragmentation
+15582.076	total actual memory usage
+pan: elapsed time 1.16e+03 seconds
+pan: rate 231499.41 states/second
+\end{lstlisting}
+
+\subsection{Java} \label{sec:java}

@@ -1,2 +1,48 @@
 %!TEX root = ../Thesis.tex
 \section{Step 2}
+The software spin uses Promela models to verify a concurrent model. The model shows rather the processes uses variables and other shared features in a valid and intended way. The processes should not be allowed to enter more than 4 cars at a time and only in one direction.
+\\
+
+\subsection{Analysis}
+The Promela code is a little different to get to work than the java code. The semaphore described previously result in the code found in appendix \ref{sec:jSpin}. The code display the enter part followed by the leave part of the cars alley class in java. The result of the analysis shows with 8 threads the program runs correctly. 
+
+\begin{lstlisting}
+pan: resizing hashtable to -w29.. pan: out of memory
+hint: to reduce memory, recompile with
+  -DCOLLAPSE # good, fast compression, or
+  -DMA=84   # better/slower compression, or
+  -DHC # hash-compaction, approximation
+  -DBITSTATE # supertrace, approximation
+(Spin Version 6.1.0 -- 4 May 2011)
+Warning: Search not completed
+	+ Partial Order Reduction
+Full statespace search for:
+	never claim         	- (none specified)
+	assertion violations	+
+	cycle checks       	- (disabled by -DSAFETY)
+	invalid end states	+
+State-vector 84 byte, depth reached 108, ... errors: 0 ...
+ 2.69e+08 states, stored
+6.5625499e+08 states, matched
+9.2525499e+08 transitions (= stored+matched)
+1.4695379e+08 atomic steps
+hash conflicts: 4.0118364e+08 (resolved)
+Stats on memory usage (in Megabytes):
+28732.300	equivalent memory usage for 
+states (stored*(State-vector + overhead))
+11478.569	actual memory usage for states (compression: 39.95%)
+         	state-vector as stored = 17 byte + 28 byte overhead
+ 4096.000	memory used for hash table (-w29)
+    0.107	memory used for DFS stack (-m2000)
+    4.417	memory lost to fragmentation
+15570.259	total actual memory usage
+pan: elapsed time 1.49e+03 seconds
+pan: rate    180388 states/second
+\end{lstlisting}
+
+The analysis does not show any errors, but a warning is given "Search not complete". Other analysis have been run, which does not show the warning, but these are with less processes. These analysis can be found in the appendix \ref{sec:jSpin}. The problem is that the pan runs out of memory on the thin clients, which result in a termination. The program does the analysis, but takes a long time and so far the biggest analysis run has 6 processes without error. The error can occur on 6 processes, but does not occur every time. For 5 processes the analysis does seem to work every time, but does only have 1 car in the one direction and 4 in the other.
+
+The analysis shows no errors which means the checks (found at the bottom of the code) do hold. The different semaphores are kept within the limits of the variables. 
+
+\subsection{Implementation}
+The code in appendix \ref{sec:jSpin} is a close implementation of the code in java, which can be found in appendix \ref{sec:java}
