@@ -1,9 +1,9 @@
 \select@language {english}
 \contentsline {section}{\numberline {1}Introduction}{1}
-\contentsline {section}{\numberline {2}Implementation}{2}
-\contentsline {section}{\numberline {3}Implementation}{2}
-\contentsline {section}{\numberline {4}Implementation}{2}
-\contentsline {section}{\numberline {5}Implementation}{2}
-\contentsline {section}{\numberline {6}Implementation}{2}
+\contentsline {section}{\numberline {2}Step 1}{2}
+\contentsline {section}{\numberline {3}Step 2}{2}
+\contentsline {section}{\numberline {4}Step 3}{2}
+\contentsline {section}{\numberline {5}Step 4}{2}
+\contentsline {section}{\numberline {6}Step 5}{2}
 \contentsline {section}{\numberline {7}Evaluation}{2}
 \contentsline {section}{\numberline {8}Conclusion}{2}
