@@ -1,2 +1,11 @@
 %!TEX root = ../main.tex
 \section{Introduction}
+The course teaches how to handle software with additional tasks within one software program. Software will have threads handle different tasks and have shared variables, which the threads will have limited or full access to. Concurrent thread can be used for many different objects and goals depending on the kind of project the software is written for. Threads can often be used as optimization in software, where different threads will handle different part of an calculation or another task. Especially with the modern processors running multiple cores at once, then one core can handle a task while another handles a different task.
+\\
+
+The project is about concurrent processes running individually and using specific data in cooperation with the other processes. The project has 9 cars driving around a parking lot with the cars having different routes. The cars will have to make sure they do not cause accidents or end up in a dead lock situation. The cars will have to pass through an alley with only room the cars driving in one direction. The cars are run by a thread each to make sure the cars are not getting into an accident. 
+
+In the project the alley is managed by either a semaphore or a monitor written in Java. These are two different approaches of how to handle atomic actions in software. In other words mean the variable or a critical section is only available to one thread at a time.
+\\
+
+In the end the cars will be driving with the alley acting as a traffic light. The cars only being able to drive in one direction at a time, while the others will have to wait till the alley is available. The cars also has a barrier, where the cars will wait until a specific number of cars are waiting. The traffic will end up going around the circuit in a smooth flow.

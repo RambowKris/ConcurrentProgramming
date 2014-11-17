@@ -15,11 +15,14 @@
 \usepackage{setspace}
 \usepackage{amsfonts}
 \usepackage{listings}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \begin{document}
 %Header information
 \setlength{\parindent}{0 cm}
-\lhead{02158 Concurrent Programming}
+\lhead{02158}
 \chead{Group 24}
 \rhead{\today}
 \rfoot{}
@@ -34,7 +37,7 @@
 \newpage
 
 \pagenumbering{arabic}% Arabic page numbers (and reset to 1)
-\rfoot{Side \thepage\ af \pageref{LastPage}}
+\rfoot{Page \thepage\ of \pageref{LastPage}}
 \input{sections/introduction.tex}
 
 \newpage
@@ -44,6 +47,8 @@
 \input{sections/step3.tex}
 \input{sections/step4.tex}
 \input{sections/step5.tex}
+
+\input{sections/tests.tex}
 
 \input{sections/evaluation.tex}
 
