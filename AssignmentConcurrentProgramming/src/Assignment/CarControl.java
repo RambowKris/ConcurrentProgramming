@@ -1,10 +1,9 @@
+package Assignment;
 //Prototype implementation of Car Control
 //Mandatory assignment
 //Course 02158 Concurrent Programming, DTU, Fall 2014
 
 //Hans Henrik Løvengreen    Oct 6, 2014
-
-package Assignment;
 
 import java.awt.Color;
 
@@ -53,6 +52,7 @@ class Alley {
 	Semaphore u = new Semaphore(4);
 	Semaphore d = new Semaphore(1);
 	Semaphore b = new Semaphore(1);
+	Semaphore a = new Semaphore(1);
 	boolean trafficUp;
 
 	public void print(int no, String msg) {
@@ -156,12 +156,23 @@ class Alley {
 	public void leave(int no) throws InterruptedException {
 
 		print(no, " starts leaving");
-
+		
+		
 		u.V();
 
-		if (Integer.parseInt(u.toString()) == 4) {
-			d.V();
+		try{ a.P(); }catch(InterruptedException e){
+			throw new InterruptedException();
 		}
+		
+		if (Integer.parseInt(u.toString()) == 4) {
+
+			if(Integer.parseInt(d.toString())==0){
+				d.V();
+			}
+		}
+		a.V();
+		
+		
 		print(no, " ends leaving");
 
 	}
@@ -178,9 +189,9 @@ class Barrier {
 	boolean barrierOn;
 
 	public void print(String msg) {
-		System.out.println(msg);
-		System.out.println("Barrier number1: " + b.toString());
-		System.out.println("Barrier number2: " + c.toString());
+//		System.out.println(msg);
+//		System.out.println("Barrier number1: " + b.toString());
+//		System.out.println("Barrier number2: " + c.toString());
 	}
 
 	// Wait for others to arrive (if barrier active)
@@ -383,7 +394,6 @@ class Car extends Thread {
 					atBarrier = false;
 				}
 			} catch (InterruptedException e) {
-				cd.println("Car " + no + " has been removed.");
 				cd.clear(curpos);
 				break;
 			}
@@ -392,7 +402,6 @@ class Car extends Thread {
 				try {
 					alley.enter(no);
 				} catch (InterruptedException e) {
-					cd.println("Car " + no + " has been removed.");
 					cd.clear(curpos);
 					break;
 					// cd.println("Exception in Car no. " + no);
@@ -415,9 +424,28 @@ class Car extends Thread {
 
 			}
 
+//			newpos = nextPos(curpos);
+//
+//			newpos.take();
+//			cd.clear(curpos);
+//			cd.mark(curpos, newpos, col, no);
+//			try {
+//				sleep(speed());
+//			} catch (InterruptedException e) {
+//				cd.clear(curpos, newpos);
+//				break;
+//			}
+//			cd.clear(curpos, newpos);
+//			cd.mark(newpos, col, no);
+//			
+//			newpos.free();
+//			
+//			curpos = newpos;
+
+			
+			carcon.seeSem();
 			newpos = nextPos(curpos);
 			Pos[] position = carcon.getPositions();
-			carcon.seeSem();
 			boolean free = true;
 			for (int i = 0; i < 9; i++) {
 				if (i != no) {
@@ -439,7 +467,6 @@ class Car extends Thread {
 				try {
 					sleep(speed());
 				} catch (InterruptedException e) {
-					cd.println("Car " + no + " has been removed");
 					cd.clear(curpos, newpos);
 					break;
 				}
@@ -450,10 +477,10 @@ class Car extends Thread {
 				carcon.setPosition(no, curpos);
 				carcon.freeSem();
 			} else {
+				carcon.freeSem();
 				try {
 					sleep(speed());
 				} catch (InterruptedException e) {
-					cd.println("Car " + no + " has been removed");
 					cd.clear(curpos);
 					break;
 				}
@@ -525,16 +552,15 @@ public class CarControl implements CarControlI {
 
 	public void barrierOn() {
 		bar.on();
-		// cd.println("Barrier On not implemented in this version");
+		cd.println("Barrier is on");
 	}
 
 	public void barrierOff() {
 		bar.off();
-		// cd.println("Barrier Off not implemented in this version");
+		cd.println("Barrier is off");
 	}
 
 	public void barrierSet(int k) {
-		// cd.println("Barrier threshold setting not implemented in this version");
 		if (!bar.barrierOn) {
 			bar.threshold = k;
 		} else {
@@ -542,16 +568,17 @@ public class CarControl implements CarControlI {
 				bar.threshold = k;
 			} else {
 				bar.threshold = k;
-				System.out.println(bar.c.toString());
 				int limit = 9 - Integer.parseInt(bar.c.toString());
-				System.out.println("This is limit " + limit);
+//				System.out.println("This is limit " + limit);
 				if (limit > k) {
-					for (int i = 0; i < k; i++) {
+					int d = limit/k;
+					for (int i = 0; i < k*d; i++) {
 						bar.b.V();
 					}
 				}
 			}
 		}
+		cd.println("Barrier threshold is set to "+k);
 
 		// This sleep is for illustrating how blocking affects the GUI
 		// Remove when feature is properly implemented.
@@ -579,7 +606,9 @@ public class CarControl implements CarControlI {
 			} catch (Exception e) {
 			}
 			// cd.println("Remove Car not implemented in this version");
+			cd.println("Car " + no + " has been removed.");
 		}
+
 	}
 
 	public void restoreCar(int no) {

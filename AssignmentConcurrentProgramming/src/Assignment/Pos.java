@@ -10,9 +10,18 @@ public class Pos {
 
     public int row;       // Note: public
     public int col;
+    Semaphore sem;
     
-    public Pos(int i, int j) { row = i;  col = j; }
+    public Pos(int i, int j) { row = i;  col = j; sem=new Semaphore(1); }
 
+    public void free(){
+    	sem.V();
+    }
+    
+    public void take(){
+    	try{ sem.P(); }catch(InterruptedException e){}
+    }
+    
     public static boolean equal(Pos p1, Pos p2) {
         if (p1 == null || p2 == null) return false;
         return (p1.row == p2.row) && (p1.col == p2.col);
