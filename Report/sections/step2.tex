@@ -30,8 +30,10 @@ hash conflicts: 4.0118364e+08 (resolved)
 Stats on memory usage (in Megabytes):
 28732.300	equivalent memory usage for 
 states (stored*(State-vector + overhead))
-11478.569	actual memory usage for states (compression: 39.95%)
-         	state-vector as stored = 17 byte + 28 byte overhead
+11478.569	actual memory usage for states 
+    (compression: 39.95%)
+         	state-vector as stored = 17 byte + 
+         	    28 byte overhead
  4096.000	memory used for hash table (-w29)
     0.107	memory used for DFS stack (-m2000)
     4.417	memory lost to fragmentation
@@ -46,3 +48,5 @@ The analysis shows no errors which means the checks (found at the bottom of the 
 
 \subsection{Implementation}
 The code in appendix \ref{sec:jSpin} is a close implementation of the code in java, which can be found in appendix \ref{sec:java}
+
+Some of the challenges has been to get the jSpin code to do the exact same as the java code, but we have received some help from the TA to get it right. The challenges was to make the wait function along with the semaphore code to behave as intended.

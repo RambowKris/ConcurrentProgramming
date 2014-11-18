@@ -1,5 +1,42 @@
 %!TEX root = ../Thesis.tex
 \section{Appendix}
+
+\subsection{Collision avoidance} \label{sec:collision_avoidance}
+The code for the cars to avoid collision can be seen below.
+\begin{lstlisting}
+for (int i = 0; i < 9; i++) {
+  if (i != no) {
+    //Checking the position of the other cars 
+    //with the new position
+    if (position[i].equals(newpos)) {
+      free = false;
+    }
+    //checking the next position of the other 
+    //cars with the cars next position
+    if (newpos.equals(cd.nextPos(i, position[i]))) {
+      if(inAlley){
+        if(no<5){
+          //Make sure the cars in 
+          //the alley goes first
+          if (no > i) {
+            free = false;
+          }
+        }else{
+          if (no < i) {
+            free = false;
+          }
+        }
+   }else{
+      //If the cars are outside the alley the car
+      // with highest number goes first
+      if (no < i) {
+        free = false;
+      }
+    }
+  }
+}
+\end{lstlisting}
+
 \subsection{jSpin}\label{sec:jSpin}
 The code from jSpin to run the analysis:
 \begin{lstlisting} 
@@ -150,5 +187,3 @@ states (stored*(State-vector + overhead))
 pan: elapsed time 1.16e+03 seconds
 pan: rate 231499.41 states/second
 \end{lstlisting}
-
-\subsection{Java} \label{sec:java}
