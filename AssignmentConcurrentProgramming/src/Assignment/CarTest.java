@@ -26,8 +26,8 @@ public class CarTest extends Thread {
                 cars.stopAll();
                 break;
 
-	            case 1: 
-	            	// All cars are started. The barrier is turned on, and when all cars are waiting, 
+	        case 1: 
+	          	// All cars are started. The barrier is turned on, and when all cars are waiting, 
             	// the barrier is turned off, and all cars are released. And then the cars
             	// drives a single round and stop.
             	cars.startAll();
@@ -38,7 +38,42 @@ public class CarTest extends Thread {
             	cars.stopAll();
             	break;
             	
-            case 19:
+	        case 2:
+	        	// Test of remove in alley and in queue
+	        	cars.startCar(1);
+	        	cars.startCar(2);
+	        	cars.startCar(5);
+	        	cars.startCar(6);
+	        	sleep(4000);
+	        	cars.removeCar(6);
+	        	cars.removeCar(2);
+	        	sleep(5000);
+	        	cars.restoreCar(2);
+	        	cars.restoreCar(6);
+	        	sleep(5000);
+	        	cars.removeCar(6);
+	        	sleep(10000);
+	        	cars.stopAll();
+	        	sleep(10000);
+	        	cars.startAll();
+	        	sleep(20000);
+	        	cars.stopAll();
+	        	break;
+	        	
+	        case 5:
+	        	// Test of remove and restore
+	        	cars.startAll();
+	        	sleep(1500);
+	        	cars.removeCar(2);
+	        	cars.removeCar(5);
+	        	sleep(3000);
+	        	cars.restoreCar(5);
+	        	cars.removeCar(4);
+	        	sleep(5000);
+	        	cars.stopAll();
+	        	break;
+	        
+	        case 19:
                 // Demonstration of speed setting.
                 // Change speed to double of default values
                 cars.println("Doubling speeds");
