@@ -23,10 +23,21 @@ public class CarTest extends Thread {
                 // Demonstration of startAll/stopAll.
                 // Should let the cars go one round (unless very fast)
                 cars.startAll();
-                sleep(3000);
                 cars.stopAll();
                 break;
 
+	            case 1: 
+	            	// All cars are started. The barrier is turned on, and when all cars are waiting, 
+            	// the barrier is turned off, and all cars are released. And then the cars
+            	// drives a single round and stop.
+            	cars.startAll();
+                sleep(1000);
+            	cars.barrierOn();
+            	sleep(15000);
+            	cars.barrierOff();
+            	cars.stopAll();
+            	break;
+            	
             case 19:
                 // Demonstration of speed setting.
                 // Change speed to double of default values
