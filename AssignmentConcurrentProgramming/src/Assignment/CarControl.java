@@ -449,36 +449,27 @@ class Car extends Thread {
 			boolean free = true;
 			for (int i = 0; i < 9; i++) {
 				if (i != no) {
-					if(inAlley){
-						if(no<=4 && i<=4){
-							if (carcon.getPositions()[i].equals(newpos)) {
-								free = false;
-							}
-							if (newpos.equals(cd.nextPos(i, position[i]))) {
+					if (position[i].equals(newpos)) {
+						free = false;
+					}
+					if (newpos.equals(cd.nextPos(i, position[i]))) {
+						if(inAlley){
+							if(no<5){
+								if (no > i) {
+									free = false;
+								}
+							}else{
 								if (no < i) {
 									free = false;
 								}
-							} 
+							}
 						}else{
-							if (carcon.getPositions()[i].equals(newpos)) {
-								free = false;
-							}
-							if (newpos.equals(cd.nextPos(i, position[i]))) {
-								if (no < i) {
-									free = false;
-								}
-							}
-						}
-						
-					}else{
-						if (position[i].equals(newpos)) {
-							free = false;
-						}
-						if (newpos.equals(cd.nextPos(i, position[i]))) {
 							if (no < i) {
 								free = false;
 							}
-						} 
+						}
+						
+						
 					}
 				}
 
