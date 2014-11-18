@@ -181,9 +181,8 @@ class Alley {
 
 class Barrier {
 
-	Semaphore c = new Semaphore(9);
+	int cars=0;
 	Semaphore b = new Semaphore(1);
-	Semaphore a = new Semaphore(1);
 	int threshold = 9;
 
 	boolean barrierOn;
@@ -197,32 +196,27 @@ class Barrier {
 	// Wait for others to arrive (if barrier active)
 	public void sync() throws InterruptedException {
 
-		try {
-			c.P();
-		} catch (InterruptedException e) {
-			throw new InterruptedException();
-		}
+		cars++;
 
 		print("At barrier");
 
 		if (barrierOn) {
-			if (Integer.parseInt(c.toString()) > 9 - threshold) {
+			if (cars < threshold) {
 				try {
 					b.P();
 				} catch (InterruptedException e) {
-					c.V();
+					cars--;
 					throw new InterruptedException();
 				}
 			} else {
-				int cars = Integer.parseInt(c.toString());
-				for (int i = 0; i < 9 - cars; i++) {
+				for (int i = 0; i < cars; i++) {
 					b.V();
 				}
 				b.P();
 			}
 		}
 
-		c.V();
+		cars--;
 		print("leaving");
 	}
 
@@ -241,8 +235,7 @@ class Barrier {
 	// Deactivate barrier
 	public void off() {
 		if (barrierOn) {
-			int cars = Integer.parseInt(c.toString()) - 1;
-			for (int i = 0; i < 9 - cars; i++) {
+			for (int i = 0; i < cars+1; i++) {
 				b.V();
 			}
 			barrierOn = false;
@@ -568,10 +561,9 @@ public class CarControl implements CarControlI {
 				bar.threshold = k;
 			} else {
 				bar.threshold = k;
-				int limit = 9 - Integer.parseInt(bar.c.toString());
 //				System.out.println("This is limit " + limit);
-				if (limit > k) {
-					int d = limit/k;
+				if (bar.cars > k) {
+					int d = bar.cars/k;
 					for (int i = 0; i < k*d; i++) {
 						bar.b.V();
 					}
