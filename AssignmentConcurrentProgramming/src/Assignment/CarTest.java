@@ -39,7 +39,7 @@ public class CarTest extends Thread {
             	break;
             	
 	        case 2:
-	        	// Test of remove in alley and in queue
+	        	// Test of remove in alley and in queue and restore without errors
 	        	cars.startCar(1);
 	        	cars.startCar(2);
 	        	cars.startCar(5);
@@ -60,6 +60,21 @@ public class CarTest extends Thread {
 	        	cars.stopAll();
 	        	break;
 	        	
+	        case 3:
+	        	//
+	        	
+	        	break;
+	        	
+	        case 4:
+	        	// Tests a remove of a car and the car is restored immediately afterwards
+	        	cars.startCar(5);
+	        	sleep(1500);
+	        	cars.removeCar(5);
+	        	cars.restoreCar(5);
+	        	sleep(4000);
+	        	cars.stopAll();
+	        	break;
+	        	
 	        case 5:
 	        	// Test of remove and restore
 	        	cars.startAll();
@@ -70,6 +85,27 @@ public class CarTest extends Thread {
 	        	cars.restoreCar(5);
 	        	cars.removeCar(4);
 	        	sleep(5000);
+	        	cars.stopAll();
+	        	break;
+
+	        case 6:
+	        	// The test shows that the barrier works with threshold. 
+	        	// No matter whether the threshold is increased or decreased
+	        	cars.startAll();
+	        	sleep(3000);
+	        	cars.barrierOn();
+	        	sleep(3000);
+	        	cars.barrierSet(5);
+	        	sleep(5000);
+	        	cars.barrierSet(7);
+	        	sleep(3000);
+	        	cars.barrierOff();
+	        	sleep(5000);
+	        	cars.barrierOn();
+	        	sleep(5000);
+	        	cars.barrierSet(3);
+	        	sleep(5000);
+	        	cars.barrierOff();
 	        	cars.stopAll();
 	        	break;
 	        
