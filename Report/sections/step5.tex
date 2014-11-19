@@ -7,5 +7,68 @@ To stop the car the interrupt function is used, but this means that every time a
 
 \subsection{Implementation}
 It was noticed that sometimes the cars was not totally cleared from the canvas. This is because the while loop in the run function makes a half move and then another half move, which means that sometimes two half cars can be on two different carfields. It is not always enough to just remove the car from the current position. The CarDisplay has two clear functions. The one clearing a single position and the other clearing two positions. These two functions are used to solve this problem.
+\\
+
+When the interrupt exception is caught in the barrier or alley, it is not always necessary to decrease the car counter. But to clear the car on the canvas, it is important for the functions of the barrier and the alley to throw interrupt exceptions, so that the car thread will catch the interrupt exception and then clear the car from the canvas. \\
+Some source code from the run function of the car thread is shown:
+
+\begin{lstlisting}
+if (free) {
+	cd.clear(curpos);
+	cd.mark(curpos, newpos, col, no);
+
+	try {
+		sleep(speed());
+	} catch (InterruptedException e) {
+		cd.clear(curpos, newpos);
+		break;
+	}
+
+	cd.clear(curpos, newpos);
+	cd.mark(newpos, col, no);
+	curpos = newpos;
+	carcon.seeSem();
+	carcon.setPosition(no, curpos);
+	carcon.freeSem();
+
+	} else {
+	carcon.freeSem();
+	try {
+		sleep(speed());
+	} catch (InterruptedException e) {
+		cd.clear(curpos);
+		break;
+	}
+}
+\end{lstlisting}
+\vspace{.8cm}
+
+In the code, cd is the CarDisplay. Whenever the lines cd.clear and cd.mark is shown, half a move is made as described. The interesting part of the code is the catches. It is only whenever the thread sleeps or waits that it is necessary to use try-catch. The interrupt exception should be handled differently depending on, where in the move it is caught, and that is, why there are used try-catch several times to ensure the right handling of the specific interrupt exception. \\
+
+In the alley, the caught interrupt exceptions are handled by throwing a new interrupt exception for the car thread to catch and in some cases also decrease the counter of cars. The counter of cars in the alley is a semaphore, which means that a coconut is put into the semaphore instead of decreasing a counter. \\
+Only a snippet of the enter function of the alley is shown:
+
+\begin{lstlisting}
+if (no < 5) {
+	if (trafficUp) {
+		if (Integer.parseInt(u.toString()) == 4) {
+			try {
+				d.P();
+			} catch (InterruptedException e) {
+				throw new InterruptedException();
+			}
+			trafficUp = true;
+		}
+			try {
+			u.P();
+		} catch (InterruptedException e) {
+			u.V();
+			throw new InterruptedException();
+		}
+		} else {
+\end{lstlisting}
+\vspace{.8cm}
+
+Instead of decreasing a counter, the u.V is called.
 
 \subsection{Extra G}

@@ -32,4 +32,7 @@ if(cars==0){
 \vspace{.8cm}
 
 As seen the code is much shorter, and since the function is synchronized it is not needed to do anything specific when increasing or decreasing the cars counter. The problem with the monitor was that when the cars are released, it was hard to stop them when they arrived at the barrier again. This problem is fixed by introducing the boolean stop, so when go is set false, the cars are released. The stop is set false, when car number 9 or threshold comes along. But the stop is set to true, when 
-the last car has been released.
+the last car has been released. 
+\\
+
+The same is the case for the alley monitor. It is to see in appendix \ref{sec:alleymonitor}.
