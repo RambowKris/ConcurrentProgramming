@@ -1,13 +1,12 @@
 %!TEX root = ../Thesis.tex
 \section{Step 4}
+The task of step 4 is to implement the alley and the barrier by monitors instead of semaphores. \\
+When using monitors the semaphore class is not needed. The functions are extended to be synchronized functions, and the thread calls "notifyAll" and "wait" is used.
 
-\subsection{Ideas \& Design}
+\subsection{Discussion}
+It is more convenient to use monitors for the barrier and the alley. Since the alley kind of uses groups and the barrier too. The monitor is more convenient having group whereas the semaphore is more oriented against only letting one thread pass at the time. \\
+By using monitors the code is also much less complicated which will be shown during this section.
 
-\begin{itemize}
-\item What is the difference between semaphore implementation and the monitor implementation?
-\item Which functions to use ?
-
-\end{itemize}
 
 \subsection{Implementation}
 
