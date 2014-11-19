@@ -10,6 +10,7 @@ Step one's requirements are to
 \item have cars drive through the alley
 \end{itemize}
 
+\subsection{Avoid collision}
 Overall the challenges is to stop the cars' collisions and have semaphores handle the alley. The deadlocks is a part in both the collision and the alley in a way.
 
 \begin{figure}[H]
@@ -29,3 +30,5 @@ The other case where two cars want to enter same field, can cause a deadlock wit
 \\
 
 One problem with the solution is, when the cars are driving through the alley a direction will stop. The cars driving up the alley will stop for the cars with a higher number. In this case a solution is to let the cars in the alley being prioritized higher, than the cars waiting for the alley to be vacant.
+
+\subsection{Alley}
