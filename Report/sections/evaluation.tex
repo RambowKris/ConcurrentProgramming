@@ -1,11 +1,14 @@
 %!TEX root = ../main.tex
 \section{Evaluation}
-The project has taught the practical use of semaphores and monitors in java compared to all the theory from the lectures. The use of semaphore should probably be used as the implementation to avoid collision. The semaphores does make a guarantee for the tiles being free, instead of checking the position of all the cars against the current cars position. The positions can be free, but when claiming the tile another faster car might have made the same claim. Unfortunately the problem was discovered very late, which is why another implementation has not been made.
+The project has taught the practical use of semaphores and monitors in java compared to all the theory from the lectures. The semaphores should probably be used as the implementation to avoid collision. The semaphores do make a guarantee for the tiles being free, instead of checking the position of all the cars against the current cars position. The positions can be free, but when claiming the tile another faster car might have made the same claim. Unfortunately the problem was discovered very late, which is why another implementation has not been made.
 \\
 
-The rest of the project has had small challenges, but the final product works well. The extras made in the project has mostly been parts, which was actually seen as basic functionality. Later what was seen as basic functionality was discovered as an extra assignment, which is the reason for additional extras. 
+The rest of the project has had small challenges, but the final product works well. The extras made in the project have mostly been parts, which was actually seen as basic functionality. Later what was seen as basic functionality was discovered as an extra assignment, which is the reason for additional extras. 
 
-The barrier works as suppose with editable threshold, even though the threshold is changed late in the process. The barrier is seen as working superbly. Although the barrier in monitor does not quite work as intended, but it was decided the extra E would not be implemented completely, but works with most of the tasks.  The same goes for the restore and remove processes, which works like a charm. The remove can be performed in and out of the alley and also with a restore immediately following.
+The barrier works as supposed with editable threshold, even though the threshold is changed late in the process. The barrier is seen as working superbly. Although the barrier in the monitor does not quite work as intended, but it was decided the extra E would not be implemented completely, but works with most of the tasks. The only case not working is when the threshold is lowered. Somehow the BarrierSet function can not notify the right thread and therefore nothing happens until the next car arrives at the barrier. For the restore and remove processes the same goes, they work like a charm. The remove can be performed in and out of the alley and also with a restore immediately following.
 \\
 
-The overall project teaches some experience working with parallel processes. The result is very satisfying seen with from the perspective of the group.
+Experience with concurrent processes have been gathered, and the semaphores are useful when they are understood and used correctly. A semaphore can be used for making processes wait and for making code atomically executed, which in case of concurrent programming is very important.
+\\
+
+The overall project teaches some experience working with parallel processes. The result is very satisfying seen from the perspective of the group.

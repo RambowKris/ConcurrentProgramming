@@ -1,11 +1,11 @@
 %!TEX root = ../Thesis.tex
 \section{Step 4}
 The task of step 4 is to implement the alley and the barrier by monitors instead of semaphores. \\
-When using monitors the semaphore class is not needed. The functions are extended to be synchronized functions, and the thread calls "notifyAll" and "wait" is used.
+When using monitors the semaphore class is not needed. The functions are extended to be synchronized functions, and the thread calls "notifyAll" and "wait" are used.
 
 \subsection{Discussion}
-It is more convenient to use monitors for the barrier and the alley. Since the alley kind of uses groups and the barrier too. The monitor is more convenient having group whereas the semaphore is more oriented against only letting one thread pass at the time. \\
-By using monitors the code is also much less complicated which will be shown during this section.
+It is more convenient to use monitors for the barrier and the alley. Since the alley kind of uses groups and the barrier too. The monitor is more convenient having groups whereas the semaphore is more oriented against only letting one thread pass at the time. \\
+By using monitors, the code is also much less complicated which will be shown during this section.
 
 \subsection{Implementation}
 The functions in the alley and in the barrier class are all synchronized. In addition, the sync function is more simple: 
@@ -31,8 +31,8 @@ if(cars==0){
 \end{lstlisting}
 \vspace{.8cm}
 
-As seen the code is much shorter, and since the function is synchronized it is not needed to do anything specific when increasing or decreasing the cars counter. The problem with the monitor was that when the cars are released, it was hard to stop them when they arrived at the barrier again. This problem is fixed by introducing the boolean go, so when go is set true, the cars are released. The go is set true, when car number 9 or threshold comes along. But the go is set to false, when 
+As seen the code is much shorter, and since the function is synchronized it is not needed to do anything specific when increasing or decreasing the cars counter even though they are not atomic. This problem is taken care of by the synchronized function. The problem with the monitor was that when the cars are released, it was hard to stop them when they arrived at the barrier again. This problem is fixed by introducing the boolean go, so when go is set true, the cars are released. The go is set true, when car number 9 or threshold comes along. But the go is set to false, when 
 the last car has been released. 
 \\
 
-The same is the case for the alley monitor. The enter class is much shorter and easier to figure out what happens. The rest of the alley monitor code is found in appendix \ref{sec:alleymonitor}. 
+The same is the case for the alley monitor. The enter class is much shorter and easier to figure out. The rest of the alley monitor code is found in appendix \ref{sec:alleymonitor}. 

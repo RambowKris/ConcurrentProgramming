@@ -1,3 +1,12 @@
 %!TEX root = ../Thesis.tex
 \section{Tests}
 The testing of the program has been made during the programming phase. But also some tests have been made in the CarTest-class to show examples of the program running. \\
+
+The tests have ensured that the implementation was correct and exploited the bad ideas. Some tests has also been made automatic trying to show the barrier working, the alley working, and the remove/restore functions working. \\
+The test of restoring a car immediately after removing the car is tested by this automatically testing, and it shows no errors.
+\\
+
+The more specific cases, as when the barrier threshold is lowered while the barrier is on, have to be tested manually since the cars do not have the same speed for every test. 
+\\
+
+After many tests, it was revealed that a gab in the implementation of the car bumping has occurred. This gab was not fixed in time even though it was tried to use a semaphore on the check of the position of other cars and on the set position of a single car. A last idea to fix this problem is to make a matrix holding a semaphore on every field, and then make every car take the semaphore of their position and their next position. But the time ran out, so this was not implemented.
