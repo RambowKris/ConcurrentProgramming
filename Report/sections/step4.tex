@@ -16,17 +16,17 @@ cars++;
 if (barrierOn) {
   if (cars < threshold) {
     while (!go && barrierOn) {
-			wait();	
-		}
-	}else{
-		go=false;
-		notifyAll();
-	}
+      wait();	
+    }
+  }else{
+    go=false;
+    notifyAll();
+  }
 } 
 
 cars--;
 if(cars==0){
-	go=true;
+  go=true;
 }
 \end{lstlisting}
 \vspace{.8cm}

@@ -312,24 +312,24 @@ pan: rate 231499.41 states/second
 The on function:
 \begin{lstlisting}
 public void on() {
-	if (!barrierOn) {
-		try {
-			b.P();
-		} catch (InterruptedException e) {
-		}
-		barrierOn = true;
-	}
+  if (!barrierOn) {
+    try {
+      b.P();
+    } catch (InterruptedException e) {
+    }
+    barrierOn = true;
+  }
 }
 \end{lstlisting}
 The off function:
 \begin{lstlisting}
 public void off() {
-	if (barrierOn) {
-		for (int i = 0; i < cars + 1; i++) {
-			b.V();
-		}
-		barrierOn = false;
-	}
+  if (barrierOn) {
+    for (int i = 0; i < cars + 1; i++) {
+      b.V();
+    }
+    barrierOn = false;
+  }
 }
 \end{lstlisting}
 
@@ -337,49 +337,50 @@ public void off() {
 \label{sec:alleymonitor}
 The enter function:
 \begin{lstlisting}
-public synchronized void enter(int no) throws InterruptedException {
+public synchronized void enter(int no) 
+    throws InterruptedException {
 
-	if (no < 5) {
-		if (trafficUp) {
-			cars++;
-		} else {
-			if (cars == 0) {
-				trafficUp = true;
-				cars++;
-			} else {
-				while (!trafficUp && cars > 0) {
-					wait();
-				}
-				trafficUp = true;
-				cars++;
-			}
-		}
-	} else {
-		if (trafficUp) {
-			if (cars == 0) {
-				trafficUp = false;
-				cars++;
-			} else {
-				while (trafficUp && cars > 0) {
-					wait();
-				}
-				trafficUp = false;
-				cars++;
-			}
-		} else {
-			cars++;
-		}
-	}
+  if (no < 5) {
+    if (trafficUp) {
+      cars++;
+    } else {
+      if (cars == 0) {
+        trafficUp = true;
+        cars++;
+      } else {
+        while (!trafficUp && cars > 0) {
+          wait();
+        }
+        trafficUp = true;
+        cars++;
+      }
+    }
+  } else {
+    if (trafficUp) {
+      if (cars == 0) {
+        trafficUp = false;
+        cars++;
+      } else {
+        while (trafficUp && cars > 0) {
+          wait();
+        }
+          trafficUp = false;
+          cars++;
+        }
+    } else {
+      cars++;
+    }
+  }
 }
 \end{lstlisting}
 The leave function:
 \begin{lstlisting}
 public synchronized void leave(int no) {
 
-	cars--;
+  cars--;
 
-	if (cars == 0) {
-		notifyAll();
-	}
+  if (cars == 0) {
+    notifyAll();
+  }
 }
 \end{lstlisting}
