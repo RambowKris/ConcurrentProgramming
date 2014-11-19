@@ -1,0 +1,63 @@
+\documentclass[a4paper]{article} %for use of A4 papers
+\usepackage[T1]{fontenc} %
+\usepackage[latin1]{inputenc}
+\usepackage{lmodern} %Laver standard font om til vektorfont
+\usepackage[danish, english]{babel} %
+\usepackage{icomma} %Laver den om til europ�isk komma
+\usepackage{mathtools} % g�r du kan lave equations math og displaymath
+\usepackage{bm} %g�r du kan bold specifikke tegn i equation
+\usepackage{graphicx} %bliver brugt til billeder og figurer.
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancyplain}
+\floatstyle{ruled}
+\usepackage{setspace}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+%Header information
+\setlength{\parindent}{0 cm}
+\lhead{02158}
+\chead{Group 24}
+\rhead{\today}
+\rfoot{}
+\cfoot{}
+
+\input{sections/front_page.tex}
+
+\pagenumbering{gobble}% Remove page numbers (and reset to 1)
+
+\tableofcontents
+
+\newpage
+
+\pagenumbering{arabic}% Arabic page numbers (and reset to 1)
+\rfoot{ \thepage}
+\input{sections/introduction.tex}
+
+\newpage
+
+\input{sections/step1.tex}
+\input{sections/step2.tex}
+\input{sections/step3.tex}
+\input{sections/step4.tex}
+\input{sections/step5.tex}
+
+\input{sections/tests.tex}
+
+\input{sections/evaluation.tex}
+
+\input{sections/conclusion.tex}
+
+\newpage
+\pagenumbering{Roman}
+\renewcommand{\thesubsection}{\Alph{subsection}}
+\input{sections/appendix.tex}
+
+
+\end{document}
