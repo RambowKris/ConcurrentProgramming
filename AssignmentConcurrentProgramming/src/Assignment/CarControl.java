@@ -579,7 +579,7 @@ public class CarControl implements CarControlI {
 			} else {
 				bar.threshold = k;
 //				System.out.println("This is limit " + limit);
-				if (bar.cars > k) {
+				if (bar.cars >= k) {
 					int d = bar.cars/k;
 					for (int i = 0; i < k*d; i++) {
 						bar.b.V();
