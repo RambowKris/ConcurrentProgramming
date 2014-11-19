@@ -72,3 +72,4 @@ if (no < 5) {
 Instead of decreasing a counter, the u.V is called.
 
 \subsection{Extra G}
+The remove function does not need any larger modifications to fit to the monitor implementation of the barrier. For the semaphore edition of the barrier class, the interrupt exception has to be caught in the run function of the car class, and the counter of cars in the barrier has to be decreased. In the semaphore edition of the barrier class, this decrease mechanism is done in the sync function of the barrier class and afterwards an interrupt exception is thrown for the run function of the car class to catch and clear the car of the canvas. All this means, that the barrier is waiting for the number of visible cars waiting to be equal to the threshold, and no removed has influence.
