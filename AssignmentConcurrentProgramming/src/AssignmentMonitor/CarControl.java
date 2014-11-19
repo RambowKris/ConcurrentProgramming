@@ -122,14 +122,14 @@ class Barrier {
 	int threshold = 9;
 
 	boolean barrierOn;
-	boolean stop;
+	boolean go;
 
 	public void print(String msg) {
 		// System.out.println(msg);
 		// System.out.println("Barrier number1: " + b.toString());
 		// System.out.println("Barrier number2: " + c.toString());
 	}
-	
+		
 	// Wait for others to arrive (if barrier active)
 	public synchronized void sync() throws InterruptedException {
 
@@ -139,18 +139,18 @@ class Barrier {
 
 		if (barrierOn) {
 			if (cars < threshold) {
-				while (stop||!barrierOn) {
+				while (!go && barrierOn) {
 					wait();	
 				}
 			}else{
-				stop=false;
+				go=true;
 				notifyAll();
 			}
 		} 
 
 		cars--;
 		if(cars==0){
-			stop=true;
+			go=false;
 		}
 		print("leaving");
 	}
@@ -159,7 +159,7 @@ class Barrier {
 	public synchronized void on() {
 		if (!barrierOn) {
 			barrierOn = true;
-			stop=true;
+			go=false;
 			print("Barrier on");
 		}
 	}
@@ -168,6 +168,7 @@ class Barrier {
 	public synchronized void off() {
 		if (barrierOn) {
 			barrierOn = false;
+			go = true;
 			notifyAll();
 			print("Barrier off");
 		}
@@ -512,9 +513,9 @@ public class CarControl implements CarControlI {
 			} else {
 				bar.threshold = k;
 				if (bar.cars >= k) {
-					bar.stop=false;
-					try{
-					bar.notifyAll();
+					bar.go=true;
+					try{						
+						notifyAll();
 					}catch(Exception e){
 						
 					}
