@@ -34,7 +34,7 @@ One problem with the solution is, when the cars are driving through the alley a 
 
 Unfortunately the collision detection does rarely have a collision on a tile. The collisions happen right, when a faster car want to enter a field, where another car is entering. The faster car will have to ask at the right moment for the collision to happen. The collisions does unfortunately happen. 
 
-A solution would be to use semaphores for every tile in the map to make sure no car would be at the tile at the same time. The cars would then be waiting correctly for the tile to be free. We unfortunately did not notice the issue until late in the project, while we tested other issues. The implementation seemed to work fine while working on step 1, but found out the accidents does happen very rare.
+A solution would be to use semaphores for every tile in the map to make sure no car would be at the tile at the same time. The cars would then be waiting correctly for the tile to be free. We unfortunately did not notice the issue until late in the project, while we tested other issues. The implementation seemed to work fine while working on step 1, but found out the accidents does happen so rarely.
 
 \subsection{Alley}
 \subsubsection{Ideas and design}
