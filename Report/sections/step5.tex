@@ -3,15 +3,9 @@
 This step is about how to remove a car and restore it again, not necessarily immediately after. Subproblems of this task is, how to stop the car, how to remove the car, and how to restore the car. A even harder question is, what to do when removing a car inside the alley or waiting at the barrier. These questions are considered during this task.
 
 \subsection{Ideas \& Design}
-
-
-\begin{itemize}
-\item How to stop the car?
-\item How to remove the car?
-\item How to deal with the remove of the car for the alley and barrier?
-\end{itemize}
+To stop the car the interrupt function is used, but this means that every time a thread is sleeping or waiting and exception is thrown. Try catch is used to catch these exceptions, and then it has to be calculated what to do when the thread is catch at the specific point in the program. The interrupt stops the car class, but the cars do also have to be removed from the canvas else collisions will be shown. This is done by the CarDisplay clear function but again it is important to notice where in the code the thread is interrupted. Whenever the interrupt exception is catch in the alley or at the barrier, the car counters has to be decreased.
 
 \subsection{Implementation}
-
+It was noticed that sometimes the cars was not totally cleared from the canvas. This is because the while loop in the run function makes a half move and then another half move, which means that sometimes two half cars can be on two different carfields. It is not always enough to just remove the car from the current position. The CarDisplay has two clear functions. The one clearing a single position and the other clearing two positions. These two functions are used to solve this problem.
 
 \subsection{Extra G}
