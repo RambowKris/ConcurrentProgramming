@@ -127,7 +127,7 @@
 //	int threshold = 9;
 //
 //	boolean barrierOn;
-//	boolean go;
+//	boolean stop;
 //
 //	public void print(String msg) {
 //		// System.out.println(msg);
@@ -144,18 +144,18 @@
 //
 //		if (barrierOn) {
 //			if (cars < threshold) {
-//				while (go||!barrierOn) {
+//				while (stop||!barrierOn) {
 //					wait();	
 //				}
 //			}else{
-//				go=false;
+//				stop=false;
 //				notifyAll();
 //			}
 //		} 
 //
 //		cars--;
 //		if(cars==0){
-//			go=true;
+//			stop=true;
 //		}
 //		print("leaving");
 //	}
@@ -164,7 +164,7 @@
 //	public synchronized void on() {
 //		if (!barrierOn) {
 //			barrierOn = true;
-//			go=true;
+//			stop=true;
 //			print("Barrier on");
 //		}
 //	}
