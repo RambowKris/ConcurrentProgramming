@@ -87,6 +87,8 @@ public class CarTest extends Thread {
 	        	cars.removeCar(4);
 	        	sleep(5000);
 	        	cars.stopAll();
+	        	cars.restoreCar(4);
+	        	cars.restoreCar(2);
 	        	break;
 
 	        case 6:
