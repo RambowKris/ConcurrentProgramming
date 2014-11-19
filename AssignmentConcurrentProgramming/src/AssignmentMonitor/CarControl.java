@@ -328,7 +328,6 @@ class Car extends Thread {
 				try {
 					alley.enter(no);
 				} catch (InterruptedException e) {
-					alley.cars--;
 					cd.clear(curpos);
 					break;
 					// cd.println("Exception in Car no. " + no);
