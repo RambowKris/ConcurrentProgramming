@@ -370,16 +370,37 @@ class Car extends Thread {
 			boolean free = true;
 			for (int i = 0; i < 9; i++) {
 				if (i != no) {
+					// Checking the position of the other cars with the new
+					// position
 					if (position[i].equals(newpos)) {
 						free = false;
-					} else if (nextPos(position[i]).equals(newpos)) {
-						if (no < i) {
-							free = false;
+					}
+					// checking the next position of the other cars with the
+					// cars next position
+					if (newpos.equals(cd.nextPos(i, position[i]))) {
+						if (inAlley) {
+							if (no < 5) {
+								// Make sure the cars in the alley goes first
+								if (no > i) {
+									free = false;
+								}
+							} else {
+								if (no < i) {
+									free = false;
+								}
+							}
+						} else {
+							// If the cars are outside the alley the car with
+							// highest number goes first
+							if (no < i) {
+								free = false;
+							}
 						}
 					}
 				}
 			}
 			carcon.freeSem();
+
 
 			if (free) {
 				// Move to new position
