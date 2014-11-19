@@ -4,7 +4,8 @@
 
 *.aux
 *.toc
-
+main.pdf
+*.synctex.gz
 
 
 #################
@@ -36,7 +37,6 @@ local.properties
 
 # PDT-specific
 .buildpath
-
 
 #################
 ## Visual Studio

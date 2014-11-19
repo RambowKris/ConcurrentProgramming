@@ -1,18 +1,78 @@
 %!TEX root = ../Thesis.tex
 \section{Step 3}
-This step concerns the barrier. The barrier has to stop the cars until all cars are waiting together. Then they should all be released for a round, and wait when they arrive at the barrier next time.
+This step concerns the barrier. The barrier has to stop the cars until all cars are waiting at the barrier. Then they should all be released for a single round, and wait when they arrive at the barrier again time.
 
 \subsection{Ideas \& Design}
-Before and during the implementation, some ideas were discussed. The cars had to stop at the barrier. Then they had to be released, but only until they arrived at the barrier again. Also the cars should stop waiting, when the barrier is turned off. \\
+Before and during the implementation, some ideas were discussed. The cars had to stop at the barrier. Then they had to be released, but only until they arrive at the barrier again. Also the cars should be released, when the barrier is turned off. \\
 The idea was to make the on and off function quite similar to the on and off function from the Gate-class. The only difference it that the off function had to release the waiting cars.\\ 
 The hard problem was, how to do the sync function right. A counter is used to count waiting cars, and a single semaphore is used to make the cars wait. \\
 The sync function should keep track of number of cars, and whether the barrier is on or off.
 
 \subsection{Implementation}
 The on and off functions were implemented as the on and off functions from the Gate-class almost. The difference is that the off function releases the cars waiting at the barrier. The on function takes the only coconut in the semaphore b.\\
-%\fig{barrier} shows the implementation:
 
-As seen, the sync function increases the cars counter, checks on the barrierOn boolean. Nothing happens in the case that the barrier is not on, meaning off. The cars counter will just be decreased again and the car will go on. \\
-In the case that the barrier is on, the car will wait for a coconut in the semaphore, b. Until the cars counter reaches 9, the cars will wait. The semaphore b had only a single coconut, which was taken by the on function. When the 9th car comes along, the cars counter will not be less than 9, and it will release a number of coconuts corresponding to the cars counter. This means, that all cars will be released, and the 
+The following code is the sync function:
+\begin{lstlisting}
+try {
+	a.P();
+} catch (InterruptedException e) {
+	throw new InterruptedException();
+}
+cars++;
+a.V();
+
+if (barrierOn) {
+	if (cars < 9) {
+		try {
+			b.P();
+		} catch (InterruptedException e) {
+			cars--;
+			throw new InterruptedException();
+		}
+	} else {
+		for (int i = 0; i < cars; i++) {
+			b.V();
+		}
+		b.P();
+	}
+}
+
+try {
+	a.P();
+} catch (InterruptedException e) {
+	cars--;
+	throw new InterruptedException();
+}
+cars--;
+a.V();
+\end{lstlisting}
+\vspace{.8cm}
+
+As seen, the sync function increases the cars counter, checks on the barrierOn boolean. Nothing happens in the case that the barrier is not on, meaning the barrier is off. The cars counter will just be decreased again and the car will go on. \\
+In the case that the barrier is on, the car will wait for a coconut in the semaphore, b. Until the cars counter reaches 9, the cars will wait. The semaphore, b, had only a single coconut, which was taken by the on function. When the 9th car comes along, the cars counter will not be less than 9, and it will release a number of coconuts corresponding to the cars counter. This means, that all cars will be released, and when they arrive again, they will wait, since the semaphore has no coconuts. \\
+The on and off functions are to be seen in the appendix, section \ref{sec:barrier}.
 
 \subsection{Extra B}
+In addition to the simple barrier a threshold is added. The threshold is a number which decides how many cars should be waiting before they are released. The only difference for the sync function is that the number 9 is replaced by the integer threshold. This integer is changed by the BarrierSet function in CarControl class. This function is important for describing how the threshold is changed.\\
+The BarrierSet function is shown in code:
+
+\begin{lstlisting}
+if (!bar.barrierOn) {
+	bar.threshold = k;
+} else {
+	if (k > bar.threshold) {
+		bar.threshold = k;
+	} else {
+		bar.threshold = k;
+		if (bar.cars >= k) {
+			int d = bar.cars / k;
+			for (int i = 0; i < k * d; i++) {
+				bar.b.V();
+			}
+		}
+	}
+}
+\end{lstlisting}
+\vspace{.8cm}
+
+The k is the number of which the threshold should be equal to. From the code, it is seen that if the barrier is not on, the threshold should be changed right away without any further considerations. On the other side when the barrier is on, it is checked whether the new threshold is bigger or smaller than the previous one. Is it bigger, then it should be changed right away. But if the new threshold, k, is smaller a new check is to be made. In the case that k is smaller than the threshold, it is important to check whether the number of waiting cars are larger or equal to k. Are there more cars waiting than the new threshold, then k number of cars should be released, or d times k cars depending on whether there are more than twice as many cars waiting as the new threshold. Of course when the number of cars waiting is less than the new threshold, the threshold should just be changed without releasing any cars.
