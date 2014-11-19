@@ -156,6 +156,35 @@ class Alley {
 }
 \end{lstlisting}
 
+\subsection{Checks}
+\label{sec:checks}
+
+\begin{lstlisting}
+	if (barpos.equals(curpos)) {
+		atBarrier = true;
+		carcon.getBarrier().sync();
+		atBarrier = false;
+	}
+} catch (InterruptedException e) {
+	cd.clear(curpos);
+	break;
+}
+	if (atAlleyEntre(curpos) && !inAlley) {
+	try {
+		alley.enter(no);
+	} catch (InterruptedException e) {
+		cd.clear(curpos);
+		break;
+	}
+		inAlley = true;
+}
+	if (atAlleyEnd(curpos) && inAlley) {
+	inAlley = false;
+	try {
+		alley.leave(no);
+	} catch (InterruptedException e) {	}
+\end{lstlisting}
+
 \subsection{jSpin}\label{sec:jSpin}
 The code from jSpin to run the analysis:
 \begin{lstlisting} 

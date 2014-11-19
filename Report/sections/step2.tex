@@ -1,6 +1,6 @@
 %!TEX root = ../Thesis.tex
 \section{Step 2}
-The software spin uses Promela models to verify a concurrent model. The model shows rather the processes uses variables and other shared data in a valid way. The processes should not be allowed to enter more than 4 cars at a time and only in one direction for our project.
+The software spin uses Promela models to verify a concurrent model. The model shows rather the processes use variables and other shared data in a valid way. The processes should not be allowed to enter more than 4 cars at a time and only in one direction for our project.
 \\
 
 \subsection{Analysis}
@@ -42,7 +42,7 @@ pan: elapsed time 1.49e+03 seconds
 pan: rate    180388 states/second
 \end{lstlisting}
 
-The analysis does not show any errors, but a warning is given "Search not complete". Other analysis have been run, which does not show the warning, but these are with less processes. These analysis can be found in the appendix \ref{sec:jSpin}. The problem is that the pan runs out of memory on the thin clients, which result in a termination. The program does the analysis, but takes a long time and the only without the warning is for 5 processes. For 5 processes the analysis does seem to work every time, but does only have 1 car in the one direction and 4 in the other.
+The analysis does not show any errors, but a warning is given "Search not complete". Other analysis have been run, which does not show the warning, but these are with less processes. These analysis can be found in the appendix \ref{sec:jSpin}. The problem is that the pan runs out of memory on the thin clients, which result in a termination. The program does the analysis, but takes a long time and the maksimum of processes running without the warning was 5. For 5 processes the analysis does seem to work every time, but does only have 1 car in the one direction and 4 in the other.
 
 The analysis shows no errors which means the checks (found at the bottom of the code) do hold. The different semaphores are kept within the limits of the variables. 
 
@@ -50,6 +50,6 @@ The analysis shows no errors which means the checks (found at the bottom of the 
 The code in appendix \ref{sec:jSpin} is a close implementation of the code in java, which can be found in appendix \ref{sec:alley}.
 \\
 
-Some of the challenges has been to get the jSpin code to do the exact same as the java code, but we have received some help from the TA to get it right. The challenges was to make the wait function along with the semaphore code to behave as intended. 
+Some of the challenges has been to get the jSpin code to do the exact same as the java code, but we have received some help from the TA to get it right. The challenges were to make the wait function along with the semaphore code to behave as intended. 
 
 The semaphore was made with inlines for the P and V function. The inline is similar to methods and is easy to use within the project. The P function is done atomic and decrements the specific semaphore value by 1. The reason for begin atomic is to do the entire inline before another process can access the inline. For the V function the semaphore is simply incremented by 1.

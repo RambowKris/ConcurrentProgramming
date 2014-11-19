@@ -11,7 +11,7 @@ Step one's requirements are to
 \end{itemize}
 
 \subsection{Avoid collision}
-Overall the challenges is to stop the cars' collisions and have semaphores handle the traffic through the alley. The deadlocks is a part in both the collision and the alley objective in a way.
+Overall the challenge is to stop the cars' collisions and have semaphores handle the traffic through the alley. The deadlocks are both influencing the collision and the alley objective.
 
 \begin{figure}[H]
 \centering
@@ -32,20 +32,22 @@ The other case where two cars want to enter same field, can cause a deadlock wit
 One problem with the solution is, when the cars are driving through the alley a direction will stop. The cars driving up the alley will stop for the cars with a higher number. The solution is to let the cars in the alley being prioritized higher, than the cars waiting at the alley.
 \\
 
-Unfortunately the collision detection does rarely have a collision on a tile. The collisions happen right, when a faster car want to enter a field, where another car is entering. The faster car will have to ask at the right moment for the collision to happen. The collisions does unfortunately happen. 
+Unfortunately the collision detection does rarely have a collision on a tile. The collisions happen right, when a faster car want to enter a field, where another car is entering. The faster car will have to ask at the right moment for the collision to happen. The collisions do unfortunately happen. 
 
-A solution would be to use semaphores for every tile in the map to make sure no car would be at the tile at the same time. The cars would then be waiting correctly for the tile to be free. We unfortunately did not notice the issue until late in the project, while we tested other issues. The implementation seemed to work fine while working on step 1, but found out the accidents does happen rarely.
+A solution would be to use semaphores for every tile in the map to make sure no car would be at the tile at the same time. The cars would then be waiting correctly for the tile to be free. We unfortunately did not notice the issue until late in the project, while we tested other issues. The implementation seemed to work fine while working on step 1, but found out the accidents do happen rarely.
 
 \subsection{Alley}
 \subsubsection{Ideas and design}
 The idea for the traffic through the alley is to have the cars drive in one direction. If the cars would be driving from both directions, the result would be a deadlock in mid alley. The cars will have to wait for the alley being vacant to change direction. The direction is actually taken by whomever is first to arrive to the alley.
 
-The idea for our alley class is to use semaphores to manage the traffic. The idea is to use 4 different semaphores to manage different aspects of the alley traffic. One semaphore is used to make sure the maximum amount of cars in the alley is no more than 4 cars. A semaphore is used to wait for the traffic being in the specific cars direction. A semaphore is used to make the bottom queue wait for the traffic to become the up direction. The last semaphore is used to make the leave action atomic, which we found necessary due to our spin results. 
+The idea for our alley class is to use semaphores to manage the traffic. The idea is to use 4 different semaphores to manage different aspects of the alley traffic. One semaphore is used to make sure the maximum amount of cars in the alley is no more than 4 cars. A semaphore is used to wait for the traffic being in the specific cars direction. A semaphore is used to make the bottom queues act as one big queue awaiting the alley to be free and then turn the traffic direction. The last semaphore is used to make the leave action atomic, which we found necessary due to our spin results. 
 
 \subsubsection{Implementation}
 The implementation of the alley can be found in appendix \ref{sec:alley}.
 \\
 
-The implementation includes the semaphore e, d, b and a, which all have different purposes in the program. The e semaphore is used to limit the number of cars entering the alley, which in our case is 4. The d semaphore manages the direction and is used to make the cars wait for a direction change. The semaphore b is used for the bottom queue, where the cars 3 and 4 are waiting for the alley to be vacant. The b semaphore is basically support for the d semaphore, and when the direction is changed to up the b semaphore will be released. Both the queues at the bottom will then go at once as the alley is vacant, this guaranties the bottom queues are set as a group.
+The implementation of the alley class includes an enter and a leave function. Furthermore, it includes the semaphores e, d, b and a, which all have different purposes in the program. The e semaphore is used to limit the number of cars entering the alley, which in our case is 4. It could also have been a normal counter. The d semaphore manages the direction and is used to make the cars wait for a direction change. The b semaphore is basically support for the d semaphore, and when the direction is changed to up the b semaphore will be released. Both the queues at the bottom will then go at once as the alley is vacant, this guaranties the bottom queues are set as a group. 
 
 The last semaphore a is used to make sure the leave method is being done atomically. We found using spin that there were some mistakes with the release of d, which has to be done atomically. The release of the direction would otherwise enter an invalid state for the direction. The direction could otherwise in rare entities have more coconuts to pass than at the beginning of the program.
+
+Except for the two functions, a check is added in the run function of the car thread. The enter and leave positions are added to car class to make it possible to check if the car is entering the alley or leaving the alley. When the car enters the alley, the enter function of the alley class is called. These checks are to see in appendix \ref{sec:checks}.
