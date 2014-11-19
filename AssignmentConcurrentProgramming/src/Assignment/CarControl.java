@@ -182,6 +182,7 @@ class Alley {
 class Barrier {
 
 	int cars=0;
+	Semaphore a = new Semaphore(1);
 	Semaphore b = new Semaphore(1);
 	int threshold = 9;
 
@@ -196,7 +197,13 @@ class Barrier {
 	// Wait for others to arrive (if barrier active)
 	public void sync() throws InterruptedException {
 
+		try {
+			a.P();
+		} catch (InterruptedException e) {
+			throw new InterruptedException();
+		}
 		cars++;
+		a.V();
 
 		print("At barrier");
 
@@ -216,7 +223,14 @@ class Barrier {
 			}
 		}
 
+		try {
+			a.P();
+		} catch (InterruptedException e) {
+			cars--;
+			throw new InterruptedException();
+		}
 		cars--;
+		a.V();
 		print("leaving");
 	}
 
