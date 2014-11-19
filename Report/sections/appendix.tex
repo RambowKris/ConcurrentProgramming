@@ -39,6 +39,123 @@ for (int i = 0; i < 9; i++) {
 
 \subsection{Alley} \label{sec:alley}
 
+\begin{lstlisting}
+class Alley {
+
+  Semaphore u = new Semaphore(4);
+  Semaphore d = new Semaphore(1);
+  Semaphore b = new Semaphore(1);
+  Semaphore a = new Semaphore(1);
+  boolean trafficUp;
+
+  public void enter(int no) throws InterruptedException {
+
+	if (no < 5) {
+	  if (trafficUp) {
+	    if (Integer.parseInt(u.toString()) == 4) {
+          try {
+            d.P();
+          } catch (InterruptedException e) {
+            print(no, " has been removed at d.P");
+            throw new InterruptedException();
+          }
+          trafficUp = true;
+	    }
+        try {
+          u.P();
+        } catch (InterruptedException e) {
+          print(no, " has been removed at u.P");
+          u.V();
+          throw new InterruptedException();
+        }
+		
+        } else {
+          try {
+            b.P();
+          } catch (InterruptedException e) {
+            print(no, " has been removed at b.P");
+            throw new InterruptedException();
+          }
+
+            if (trafficUp) {
+              b.V();
+            } else {
+              try {
+                d.P();
+              } catch (InterruptedException e) {
+                print(no, " has been removed at d.P");
+                b.V();
+                throw new InterruptedException();
+              }
+              b.V();
+            }
+            try {
+              u.P();
+            } catch (InterruptedException e) {
+              print(no, " has been removed at u.P");
+              u.V();
+              throw new InterruptedException();
+            }
+              trafficUp = true;
+          }
+      } else {
+        if (trafficUp) {
+          try {
+            d.P();
+          } catch (InterruptedException e) {
+            print(no, " has been removed at d.P");
+            throw new InterruptedException();
+          }
+          try {
+            u.P();
+          } catch (InterruptedException e) {
+            print(no, " has been removed at u.P");
+            u.V();
+            throw new InterruptedException();
+          }
+            trafficUp = false;
+        } else {
+          if (Integer.parseInt(u.toString()) == 4) {
+            try {
+              d.P();
+            } catch (InterruptedException e) {
+              print(no, " has been removed at d.P");
+              throw new InterruptedException();
+            }
+            trafficUp = false;
+            }
+            try {
+              u.P();
+            } catch (InterruptedException e) {
+              print(no, " has been removed at u.P");
+              u.V();
+              throw new InterruptedException();
+          }
+        }
+      }
+		print(no, " ends entering");
+	}
+
+	public void leave(int no) 
+	    throws InterruptedException {
+
+	  u.V();
+	  
+      try{ a.P(); }catch(InterruptedException e){
+        throw new InterruptedException();
+      }
+		
+      if (Integer.parseInt(u.toString()) == 4) {
+        if(Integer.parseInt(d.toString())==0){
+		  d.V();
+        }
+      }
+      a.V();
+	  print(no, " ends leaving");
+	}
+}
+\end{lstlisting}
+
 \subsection{jSpin}\label{sec:jSpin}
 The code from jSpin to run the analysis:
 \begin{lstlisting} 
