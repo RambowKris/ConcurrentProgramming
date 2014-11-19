@@ -37,7 +37,7 @@
 \newpage
 
 \pagenumbering{arabic}% Arabic page numbers (and reset to 1)
-\rfoot{Page \thepage\ of \pageref{LastPage}}
+\rfoot{ \thepage}
 \input{sections/introduction.tex}
 
 \newpage
@@ -55,7 +55,7 @@
 \input{sections/conclusion.tex}
 
 \newpage
-
+\pagenumbering{Roman}
 \renewcommand{\thesubsection}{\Alph{subsection}}
 \input{sections/appendix.tex}
 
