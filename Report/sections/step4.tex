@@ -15,24 +15,24 @@ cars++;
 
 if (barrierOn) {
 	if (cars < threshold) {
-		while (stop||!barrierOn) {
+		while (!go && barrierOn) {
 			wait();	
 		}
 	}else{
-		stop=false;
+		go=false;
 		notifyAll();
 	}
 } 
 
 cars--;
 if(cars==0){
-	stop=true;
+	go=true;
 }
 \end{lstlisting}
 \vspace{.8cm}
 
-As seen the code is much shorter, and since the function is synchronized it is not needed to do anything specific when increasing or decreasing the cars counter. The problem with the monitor was that when the cars are released, it was hard to stop them when they arrived at the barrier again. This problem is fixed by introducing the boolean stop, so when go is set false, the cars are released. The stop is set false, when car number 9 or threshold comes along. But the stop is set to true, when 
+As seen the code is much shorter, and since the function is synchronized it is not needed to do anything specific when increasing or decreasing the cars counter. The problem with the monitor was that when the cars are released, it was hard to stop them when they arrived at the barrier again. This problem is fixed by introducing the boolean go, so when go is set true, the cars are released. The go is set true, when car number 9 or threshold comes along. But the go is set to false, when 
 the last car has been released. 
 \\
 
-The same is the case for the alley monitor. It is to see in appendix \ref{sec:alleymonitor}.
+The same is the case for the alley monitor. The enter class is much shorter and easier to figure out what happens. The rest of the alley monitor code is to see in appendix \ref{sec:alleymonitor}. 
