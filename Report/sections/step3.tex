@@ -14,34 +14,34 @@ The on and off functions were implemented as the on and off functions from the G
 The following code is the sync function:
 \begin{lstlisting}
 try {
-	a.P();
+  a.P();
 } catch (InterruptedException e) {
-	throw new InterruptedException();
+  throw new InterruptedException();
 }
 cars++;
 a.V();
 
 if (barrierOn) {
-	if (cars < 9) {
-		try {
-			b.P();
-		} catch (InterruptedException e) {
-			cars--;
-			throw new InterruptedException();
-		}
-	} else {
-		for (int i = 0; i < cars; i++) {
-			b.V();
-		}
-		b.P();
-	}
+  if (cars < 9) {
+    try {
+      b.P();
+    } catch (InterruptedException e) {
+      cars--;
+      throw new InterruptedException();
+    }
+  } else {
+    for (int i = 0; i < cars; i++) {
+      b.V();
+    }
+      b.P();
+    }
 }
 
 try {
-	a.P();
+  a.P();
 } catch (InterruptedException e) {
-	cars--;
-	throw new InterruptedException();
+  cars--;
+  throw new InterruptedException();
 }
 cars--;
 a.V();
@@ -58,19 +58,19 @@ The BarrierSet function is shown in code:
 
 \begin{lstlisting}
 if (!bar.barrierOn) {
-	bar.threshold = k;
+  bar.threshold = k;
 } else {
-	if (k > bar.threshold) {
-		bar.threshold = k;
-	} else {
-		bar.threshold = k;
-		if (bar.cars >= k) {
-			int d = bar.cars / k;
-			for (int i = 0; i < k * d; i++) {
-				bar.b.V();
-			}
-		}
-	}
+  if (k > bar.threshold) {
+    bar.threshold = k;
+  } else {
+    bar.threshold = k;
+    if (bar.cars >= k) {
+      int d = bar.cars / k;
+      for (int i = 0; i < k * d; i++) {
+        bar.b.V();
+      }
+    }
+  }
 }
 \end{lstlisting}
 \vspace{.8cm}

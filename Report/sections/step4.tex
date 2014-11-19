@@ -14,8 +14,8 @@ The functions in the alley and in the barrier class are all synchronized. In add
 cars++;
 
 if (barrierOn) {
-	if (cars < threshold) {
-		while (!go && barrierOn) {
+  if (cars < threshold) {
+    while (!go && barrierOn) {
 			wait();	
 		}
 	}else{
