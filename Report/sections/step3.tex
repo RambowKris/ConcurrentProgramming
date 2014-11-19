@@ -53,3 +53,26 @@ In the case that the barrier is on, the car will wait for a coconut in the semap
 The on and off functions are to be seen in the appendix, section \ref{sec:barrier}.
 
 \subsection{Extra B}
+In addition to the simple barrier a threshold is added. The threshold is a number which decides how many cars should be waiting before they are released. The only difference for the sync function is that the number 9 is replaced by the integer threshold. This integer is changed by the BarrierSet function in CarControl class. This function is important for describing how the threshold is changed.\\
+The BarrierSet function is shown in code:
+
+\begin{lstlisting}
+if (!bar.barrierOn) {
+	bar.threshold = k;
+} else {
+	if (k > bar.threshold) {
+		bar.threshold = k;
+	} else {
+		bar.threshold = k;
+		if (bar.cars >= k) {
+			int d = bar.cars / k;
+			for (int i = 0; i < k * d; i++) {
+				bar.b.V();
+			}
+		}
+	}
+}
+\end{lstlisting}
+\vspace{.8cm}
+
+The k is the number of which the threshold should be equal to. From the code, it is seen that if the barrier is not on, the threshold should be changed right away without any further considerations. On the other side when the barrier is on, it is checked whether the new threshold is bigger or smaller than the previous one. Is it bigger, then it should be changed right away. But if the new threshold, k, is smaller a new check is to be made. In the case that k is smaller than the threshold, it is important to check whether the number of waiting cars are larger or equal to k. Are there more cars waiting than the new threshold, then k number of cars should be released, or d times k cars depending on whether there are more than twice as many cars waiting as the new threshold. Of course when the number of cars waiting is less than the new threshold, the threshold should just be changed without releasing any cars.

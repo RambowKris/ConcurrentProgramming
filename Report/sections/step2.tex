@@ -48,5 +48,6 @@ The analysis shows no errors which means the checks (found at the bottom of the 
 
 \subsection{Implementation}
 The code in appendix \ref{sec:jSpin} is a close implementation of the code in java, which can be found in appendix \ref{sec:alley}.
+\\
 
-Some of the challenges has been to get the jSpin code to do the exact same as the java code, but we have received some help from the TA to get it right. The challenges was to make the wait function along with the semaphore code to behave as intended.
+Some of the challenges has been to get the jSpin code to do the exact same as the java code, but we have received some help from the TA to get it right. The challenges was to make the wait function along with the semaphore code to behave as intended. The semaphore was made with inlines for the P and V function. The inline is similar to methods and is easy to use within the project. The P function is done atomic and decrements the specific semaphore value by 1. The reason for begin atomic is to do the entire inline before another process can access the inline. For the V function the semaphore is simply incremented by 1.

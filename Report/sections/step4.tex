@@ -7,6 +7,27 @@ When using monitors the semaphore class is not needed. The functions are extende
 It is more convenient to use monitors for the barrier and the alley. Since the alley kind of uses groups and the barrier too. The monitor is more convenient having group whereas the semaphore is more oriented against only letting one thread pass at the time. \\
 By using monitors the code is also much less complicated which will be shown during this section.
 
-
 \subsection{Implementation}
+The functions in the alley and in the barrier class are all synchronized. In addition, the sync function is more simple: 
+
+\begin{lstlisting}
+cars++;
+
+if (barrierOn) {
+	if (cars < threshold) {
+		while (go||!barrierOn) {
+			wait();	
+		}
+	}else{
+		go=false;
+		notifyAll();
+	}
+} 
+
+cars--;
+if(cars==0){
+	go=true;
+}
+\end{lstlisting}
+
 

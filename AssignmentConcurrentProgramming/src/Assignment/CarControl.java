@@ -1,4 +1,5 @@
 package Assignment;
+
 //Prototype implementation of Car Control
 //Mandatory assignment
 //Course 02158 Concurrent Programming, DTU, Fall 2014
@@ -156,23 +157,23 @@ class Alley {
 	public void leave(int no) throws InterruptedException {
 
 		print(no, " starts leaving");
-		
-		
+
 		u.V();
 
-		try{ a.P(); }catch(InterruptedException e){
+		try {
+			a.P();
+		} catch (InterruptedException e) {
 			throw new InterruptedException();
 		}
-		
+
 		if (Integer.parseInt(u.toString()) == 4) {
 
-			if(Integer.parseInt(d.toString())==0){
+			if (Integer.parseInt(d.toString()) == 0) {
 				d.V();
 			}
 		}
 		a.V();
-		
-		
+
 		print(no, " ends leaving");
 
 	}
@@ -181,7 +182,7 @@ class Alley {
 
 class Barrier {
 
-	int cars=0;
+	int cars = 0;
 	Semaphore a = new Semaphore(1);
 	Semaphore b = new Semaphore(1);
 	int threshold = 9;
@@ -189,9 +190,9 @@ class Barrier {
 	boolean barrierOn;
 
 	public void print(String msg) {
-//		System.out.println(msg);
-//		System.out.println("Barrier number1: " + b.toString());
-//		System.out.println("Barrier number2: " + c.toString());
+		// System.out.println(msg);
+		// System.out.println("Barrier number1: " + b.toString());
+		// System.out.println("Barrier number2: " + c.toString());
 	}
 
 	// Wait for others to arrive (if barrier active)
@@ -249,7 +250,7 @@ class Barrier {
 	// Deactivate barrier
 	public void off() {
 		if (barrierOn) {
-			for (int i = 0; i < cars+1; i++) {
+			for (int i = 0; i < cars + 1; i++) {
 				b.V();
 			}
 			barrierOn = false;
@@ -431,50 +432,52 @@ class Car extends Thread {
 
 			}
 
-//			newpos = nextPos(curpos);
-//
-//			newpos.take();
-//			cd.clear(curpos);
-//			cd.mark(curpos, newpos, col, no);
-//			try {
-//				sleep(speed());
-//			} catch (InterruptedException e) {
-//				cd.clear(curpos, newpos);
-//				break;
-//			}
-//			cd.clear(curpos, newpos);
-//			cd.mark(newpos, col, no);
-//			
-//			newpos.free();
-//			
-//			curpos = newpos;
+			// newpos = nextPos(curpos);
+			//
+			// newpos.take();
+			// cd.clear(curpos);
+			// cd.mark(curpos, newpos, col, no);
+			// try {
+			// sleep(speed());
+			// } catch (InterruptedException e) {
+			// cd.clear(curpos, newpos);
+			// break;
+			// }
+			// cd.clear(curpos, newpos);
+			// cd.mark(newpos, col, no);
+			//
+			// newpos.free();
+			//
+			// curpos = newpos;
 
-			
 			carcon.seeSem();
 			newpos = nextPos(curpos);
 			Pos[] position = carcon.getPositions();
 			boolean free = true;
 			for (int i = 0; i < 9; i++) {
 				if (i != no) {
-					//Checking the position of the other cars with the new position
+					// Checking the position of the other cars with the new
+					// position
 					if (position[i].equals(newpos)) {
 						free = false;
 					}
-					//checking the next position of the other cars with the cars next position
+					// checking the next position of the other cars with the
+					// cars next position
 					if (newpos.equals(cd.nextPos(i, position[i]))) {
-						if(inAlley){
-							if(no<5){
-								//Make sure the cars in the alley goes first
+						if (inAlley) {
+							if (no < 5) {
+								// Make sure the cars in the alley goes first
 								if (no > i) {
 									free = false;
 								}
-							}else{
+							} else {
 								if (no < i) {
 									free = false;
 								}
 							}
-						}else{
-							//If the cars are outside the alley the car with highest number goes first
+						} else {
+							// If the cars are outside the alley the car with
+							// highest number goes first
 							if (no < i) {
 								free = false;
 							}
@@ -525,7 +528,6 @@ public class CarControl implements CarControlI {
 	int threshold;
 	Semaphore sem = new Semaphore(1);
 
-
 	public CarControl(CarDisplayI cd) {
 		this.cd = cd;
 		car = new Car[9];
@@ -555,9 +557,12 @@ public class CarControl implements CarControlI {
 	}
 
 	public void seeSem() {
-		try{ sem.P(); }catch(InterruptedException e){}
+		try {
+			sem.P();
+		} catch (InterruptedException e) {
+		}
 	}
-	
+
 	public void freeSem() {
 		sem.V();
 	}
@@ -592,16 +597,16 @@ public class CarControl implements CarControlI {
 				bar.threshold = k;
 			} else {
 				bar.threshold = k;
-//				System.out.println("This is limit " + limit);
+				// System.out.println("This is limit " + limit);
 				if (bar.cars >= k) {
-					int d = bar.cars/k;
-					for (int i = 0; i < k*d; i++) {
+					int d = bar.cars / k;
+					for (int i = 0; i < k * d; i++) {
 						bar.b.V();
 					}
 				}
 			}
 		}
-		cd.println("Barrier threshold is set to "+k);
+		cd.println("Barrier threshold is set to " + k);
 
 		// This sleep is for illustrating how blocking affects the GUI
 		// Remove when feature is properly implemented.
